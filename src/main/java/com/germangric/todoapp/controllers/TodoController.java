@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
@@ -40,10 +41,22 @@ public class TodoController implements CommandLineRunner {
         return "redirect:/";
     }
 
+    @PostMapping("/delete/{id}")
+    public String removeAllItems(@PathVariable("id") Long id){
+        todoItemRepositories.deleteById(id);
+        return "redirect:/";
+    }
+
+    @PostMapping("/removeAll")
+    public String deleteTodoItem(){
+        todoItemRepositories.deleteAll();
+        return "redirect:/";
+    }
+
     @Override
     public void run(String... args) throws Exception {
-        TodoItemRepositories.save(new TodoItem("item 1"));
-        TodoItemRepositories.save(new TodoItem("item 2"));
-        TodoItemRepositories.save(new TodoItem("item 3"));
+        TodoItemRepositories.save(new TodoItem("Задача 1"));
+        TodoItemRepositories.save(new TodoItem("Задача 2"));
+        TodoItemRepositories.save(new TodoItem("Задача 3"));
     }
 }
