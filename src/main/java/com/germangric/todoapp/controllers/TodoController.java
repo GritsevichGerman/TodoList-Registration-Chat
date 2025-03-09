@@ -14,50 +14,45 @@ import java.util.List;
 @Controller
 public class TodoController implements CommandLineRunner {
 
-    private final TodoItemRepositories TodoItemRepositories;
     private final TodoItemRepositories todoItemRepositories;
 
-    public TodoController( TodoItemRepositories todoItemRepositories) {
-        TodoItemRepositories = todoItemRepositories;
+    public TodoController(TodoItemRepositories todoItemRepositories) {
         this.todoItemRepositories = todoItemRepositories;
     }
 
-    @GetMapping
-    public String index(Model model){
-
-        List<TodoItem> allTodos = TodoItemRepositories.findAll();
+    @GetMapping("/")
+    public String index(Model model) {
+        List<TodoItem> allTodos = todoItemRepositories.findAll();
         model.addAttribute("allTodos", allTodos);
         model.addAttribute("newTodo", new TodoItem());
-
         return "index";
     }
 
     @PostMapping("/add")
-    public String add(@ModelAttribute TodoItem todoItem){
+    public String add(@ModelAttribute TodoItem todoItem) {
         todoItemRepositories.save(todoItem);
-
         return "redirect:/";
     }
 
     @PostMapping("/delete/{id}")
-    public String removeAllItems(@PathVariable("id") Long id){
+    public String removeAllItems(@PathVariable("id") Long id) {
         todoItemRepositories.deleteById(id);
         return "redirect:/";
     }
 
     @PostMapping("/removeAll")
-    public String deleteTodoItem(){
+    public String deleteTodoItem() {
         todoItemRepositories.deleteAll();
         return "redirect:/";
     }
 
     @PostMapping("/search")
-    public String searchTodoItems(@RequestParam("searchTerm") String searchTerm, Model model){
+    public String searchTodoItems(@RequestParam("searchTerm") String searchTerm, Model model) {
         List<TodoItem> allItems = todoItemRepositories.findAll();
         List<TodoItem> searchResults = new ArrayList<>();
 
-        for (TodoItem item : allItems){
-            if (item.getTitle().toLowerCase().contains(searchTerm.toLowerCase())){
+        for (TodoItem item : allItems) {
+            if (item.getTitle().toLowerCase().contains(searchTerm.toLowerCase())) {
                 searchResults.add(item);
             }
         }
@@ -70,8 +65,13 @@ public class TodoController implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        TodoItemRepositories.save(new TodoItem("Задача 1"));
-        TodoItemRepositories.save(new TodoItem("Задача 2"));
-        TodoItemRepositories.save(new TodoItem("Задача 3"));
+        todoItemRepositories.save(new TodoItem("Задача 1"));
+        todoItemRepositories.save(new TodoItem("Задача 2"));
+        todoItemRepositories.save(new TodoItem("Задача 3"));
+    }
+
+    @GetMapping("/login")
+    public String login() {
+        return "login";
     }
 }
